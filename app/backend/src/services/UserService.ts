@@ -1,15 +1,16 @@
-import ILogin from '../interfaces/ILogin';
+// import ILogin from '../interfaces/ILogin';
 import tokenGenerate from '../helper/tokenGenerate';
 import CustomError from '../middlewares/CustomError';
 import UserRepository from '../repositories/UserRepository';
 import IHash from '../interfaces/IHash';
+import { IUser } from '../interfaces/IUser';
 
 export default class UserService {
   constructor(private userModel:UserRepository, private bcrypt:IHash) { }
 
-  async login(userData:ILogin) {
+  async login(userData:IUser) {
     const userLogin = await this.userModel.findOne(userData);
-    console.log(userLogin);
+    // console.log(userLogin);
     // if (!userData.email || !userData.password) {
     // throw new CustomError(400, 'All fields must be filled"');
     // }
@@ -18,7 +19,7 @@ export default class UserService {
     if (!passwordValid || userLogin.email !== userData.email) {
       throw new CustomError(401, 'Incorrect email or password');
     }
-    const token = await tokenGenerate({ userData });
+    const token = await tokenGenerate(userLogin);
     return { token };
   }
 }
