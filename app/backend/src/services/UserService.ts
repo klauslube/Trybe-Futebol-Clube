@@ -10,7 +10,7 @@ export default class UserService {
 
   async login(userData:IUser) {
     if (!userData.email || !userData.password) {
-      throw new CustomError(400, 'All fields must be filled"');
+      throw new CustomError(400, 'All fields must be filled');
     }
     const userLogin = await this.userModel.findOne(userData);
     // console.log(userLogin);
