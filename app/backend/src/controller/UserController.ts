@@ -9,9 +9,7 @@ export default class LoginController {
 
   public login = async (req: Request, res: Response) => {
     const userData = req.body;
-    if (!userData.email || !userData.password) {
-      throw new CustomError(400, 'All fields must be filled"');
-    }
+
     const token = await this.loginService.login(userData);
 
     return res.status(200).json(token);

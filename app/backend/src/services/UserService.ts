@@ -9,11 +9,11 @@ export default class UserService {
   constructor(private userModel:UserRepository, private bcrypt:IHash) { }
 
   async login(userData:IUser) {
+    if (!userData.email || !userData.password) {
+      throw new CustomError(400, 'All fields must be filled"');
+    }
     const userLogin = await this.userModel.findOne(userData);
     // console.log(userLogin);
-    // if (!userData.email || !userData.password) {
-    // throw new CustomError(400, 'All fields must be filled"');
-    // }
     if (!userLogin) throw new CustomError(401, 'Incorrect email or password');
     const passwordValid = this.bcrypt.compare(userLogin.password, userData.password);
     if (!passwordValid || userLogin.email !== userData.email) {

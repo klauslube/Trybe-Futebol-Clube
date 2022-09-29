@@ -6,7 +6,6 @@ export default class UserRepository {
   userModel = User;
   async findOne(userData:IUser) {
     const user = await this.userModel.findOne({ where: { email: userData.email }, raw: true });
-
     return user;
   }
 }
