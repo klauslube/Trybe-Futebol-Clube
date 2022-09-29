@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import authToken from 'src/helper/authToken';
+// import authToken from 'src/helper/authToken';
 import CustomError from '../middlewares/CustomError';
 
 import UserService from '../services/UserService';
@@ -9,18 +9,21 @@ export default class LoginController {
 
   public login = async (req: Request, res: Response) => {
     const userData = req.body;
+    console.log(userData);
+    if (!userData.email || !userData.password) {
+      throw new CustomError(400, 'All fields must be filled"');
+    }
+    const token = await this.loginService.login(userData);
 
-    const checkUser = await this.loginService.login(userData);
-
-    return res.status(200).json(checkUser);
+    return res.status(200).json(token);
   };
 
-  public validate = async (req:Request, res:Response) => {
-    const { authorization } = req.headers;
-    if (!authorization) throw new CustomError(401, 'Token not found');
+  // public validate = async (req:Request, res:Response) => {
+  //   const { authorization } = req.headers;
+  //   if (!authorization) throw new CustomError(401, 'Token not found');
 
-    const payload = authToken(authorization);
-    const roleLogin = await this.loginService.validate();
-    return res.status(200).json(roleLogin);
-  };
+  //   const payload = authToken(authorization);
+  //   const roleLogin = await this.loginService.validate();
+  //   return res.status(200).json(roleLogin);
+  // };
 }
