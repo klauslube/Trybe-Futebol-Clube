@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
-import * as mocha from 'mocha';
-import bcrypt from 'bcryptjs'
+// import * as mocha from 'mocha';
+// import bcrypt from 'bcryptjs'
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -9,6 +9,7 @@ import { app } from '../app';
 import User from '../database/models/User';
 
 import { Response } from 'superagent';
+import tokenGenerate from '../helper/tokenGenerate';
 
 chai.use(chaiHttp);
 
@@ -43,8 +44,12 @@ describe('Usando o metodo POST na rota /login', () => {
       .post('/login')
       .send(userMock);
 
-    // const result = bcrypt.compareSync("senha",userMock.password);
+    const token = tokenGenerate({
+      "email": "admin@admin.com",
+      "password": "secret_admin"
+    })
     expect(chaiHttpResponse.status).to.be.eq(200);
-    expect(chaiHttpResponse.body.login).to.deep.eq(userMock);
+    expect(chaiHttpResponse.body).to.property("token");
+    // expect(chaiHttpResponse.body).to.be.deep.eq(token)
   });
 });
