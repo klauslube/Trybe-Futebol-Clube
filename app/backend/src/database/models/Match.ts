@@ -20,6 +20,8 @@ Match.init({
   homeTeam: {
     type: INTEGER,
     allowNull: false,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   homeTeamGoals: {
     type: INTEGER,
@@ -28,6 +30,8 @@ Match.init({
   awayTeam: {
     type: INTEGER,
     allowNull: false,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   awayTeamGoals: {
     type: INTEGER,
@@ -45,8 +49,8 @@ Match.init({
   timestamps: false,
 });
 
-Match.belongsTo(Team, { foreignKey: 'home_team', as: 'homeTeam' });
-Match.belongsTo(Team, { foreignKey: 'away_team', as: 'awayTeam' });
+Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
+Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
 
 Team.hasMany(Match, { foreignKey: 'homeTeam', as: 'homeTeamMatches' });
 Team.hasMany(Match, { foreignKey: 'awayTeam', as: 'awayTeamMatches' });
