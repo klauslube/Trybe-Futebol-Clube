@@ -13,7 +13,6 @@ export default class UserService {
       throw new CustomError(400, 'All fields must be filled');
     }
     const userLogin = await this.userModel.findOne(userData);
-    // console.log(userLogin);
     if (!userLogin) throw new CustomError(401, 'Incorrect email or password');
     const passwordValid = this.bcrypt.compare(userLogin.password, userData.password);
     if (!passwordValid || userLogin.email !== userData.email) {
