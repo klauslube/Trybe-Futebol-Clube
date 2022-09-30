@@ -9,7 +9,7 @@ import { app } from '../app';
 import User from '../database/models/User';
 
 import { Response } from 'superagent';
-import tokenGenerate from '../helper/tokenGenerate';
+// import tokenGenerate from '../helper/tokenGenerate';
 
 chai.use(chaiHttp);
 

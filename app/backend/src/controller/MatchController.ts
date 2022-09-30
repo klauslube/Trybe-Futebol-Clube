@@ -9,4 +9,11 @@ export default class TeamController {
 
     return res.status(200).json(allMatches);
   };
+
+  public getAllInProgress = async (req: Request, res: Response) => {
+    const { q } = req.query;
+    const allMatches = await this.matchService.getAllInProgress(q);
+
+    return res.status(200).json(allMatches);
+  };
 }
