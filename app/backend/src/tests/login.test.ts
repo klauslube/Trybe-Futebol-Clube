@@ -1,6 +1,6 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
-// import * as mocha from 'mocha';
+import * as mocha from 'mocha';
 // import bcrypt from 'bcryptjs'
 // @ts-ignore
 import chaiHttp = require('chai-http');
@@ -19,37 +19,58 @@ const userMock = {
   username: "Admin",
   role: "admin",
   email: "admin@admin.com",
-  // password: "$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW"
   password: "secret_admin",
 }
 
-describe('Usando o metodo POST na rota /login', () => {
+const fakeUserMock = {
+  username: "klaus",
+  role: "tryber",
+  email: "admin@fake.com",
+  password: "secret_fake",
+}
+
+
+describe('Deve testar os metodos na rota /login', () => {
   let chaiHttpResponse: Response;
+  describe('metodo POST', () => {
 
-  // before(async () => {
-  //   sinon
-  //     .stub(User, "findOne")
-  //     .resolves({
-      
-  //     } as User);
-  // });
-
-  // after(()=>{
-  //   (User.findOne as sinon.SinonStub).restore();
-  // })
-
-  it('Retorna um token e status 200', async () => {
-    chaiHttpResponse = await chai
-      .request(app)
-      .post('/login')
-      .send(userMock);
-
-    const token = tokenGenerate({
-      "email": "admin@admin.com",
-      "password": "secret_admin"
-    })
-    expect(chaiHttpResponse.status).to.be.eq(200);
-    expect(chaiHttpResponse.body).to.property("token");
-    // expect(chaiHttpResponse.body).to.be.deep.eq(token)
+  before(() => {
+    sinon.stub(User, "findOne").resolves({...userMock} as User);
   });
-});
+
+  after(()=> {
+   sinon.restore();
+  })
+  
+  it('Deve retornar status 200 e um Token em caso de sucesso', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(userMock);
+
+    expect(chaiHttpResponse.status).to.be.eq(200);
+    // expect(chaiHttpResponse.body).to.property("token");
+    });
+  })
+
+  it('Caso não enviado email, deve retornar status 400 e messagem de erro', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(userMock.password);
+    expect(chaiHttpResponse.status).to.be.eq(400);
+    expect(chaiHttpResponse.body).to.be.eq({message:'Incorrect email or password'})
+  })
+
+  it('Caso não enviado senha, deve retornar status 400 e messagem de erro', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(userMock.email);
+    expect(chaiHttpResponse.status).to.be.eq(400);
+    expect(chaiHttpResponse.body).to.be.eq({message:'Incorrect email or password'})
+  })
+
+  it('Caso enviado email invalido, deve retornar status 401 e messagem de erro', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(fakeUserMock.email);
+    expect(chaiHttpResponse.status).to.be.eq(401);
+    expect(chaiHttpResponse.body).to.be.eq({message:'Incorrect email or password'})
+  })
+
+  it('Caso enviado senha invalida, deve retornar status 401 e messagem de erro', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send(fakeUserMock.password);
+    expect(chaiHttpResponse.status).to.be.eq(401);
+    expect(chaiHttpResponse.body).to.have.eq({message:'Incorrect email or password'})
+  })
+})
