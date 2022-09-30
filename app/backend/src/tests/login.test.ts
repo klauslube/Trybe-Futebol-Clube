@@ -15,12 +15,6 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-const userMock = {
-  username: "Admin",
-  role: "admin",
-  email: "admin@admin.com",
-  password: "secret_admin",
-}
 
 const fakeUserMock = {
   username: "klaus",
@@ -29,48 +23,56 @@ const fakeUserMock = {
   password: "secret_fake",
 }
 
+const userMock = {
+  username: "Admin",
+  role: "admin",
+  email: "admin@admin.com",
+  password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW',
+}
+
 
 describe('Deve testar os metodos na rota /login', () => {
   let chaiHttpResponse: Response;
   describe('metodo POST', () => {
 
-  before(() => {
-    sinon.stub(User, "findOne").resolves({...userMock} as User);
+  beforeEach(() => {
+    sinon.stub(User, "findOne").resolves(userMock as User);
   });
 
   after(()=> {
-   sinon.restore();
+    (User.findOne as sinon.SinonStub).restore()
+
   })
   
   it('Deve retornar status 200 e um Token em caso de sucesso', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send(userMock);
-
+    chaiHttpResponse = await chai.request(app).post('/login').send({email:'admin@admin.com', password:'secret_admin'});
+  
     expect(chaiHttpResponse.status).to.be.eq(200);
-    // expect(chaiHttpResponse.body).to.property("token");
+    expect(chaiHttpResponse.body).to.have.property("token");
     });
   })
 
   it('Caso não enviado email, deve retornar status 400 e messagem de erro', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send(userMock.password);
+    chaiHttpResponse = await chai.request(app).post('/login').send({password:'secret_admin'});
     expect(chaiHttpResponse.status).to.be.eq(400);
-    expect(chaiHttpResponse.body).to.be.eq({message:'Incorrect email or password'})
+    expect(chaiHttpResponse.body.message).to.be.eql('All fields must be filled')
   })
 
   it('Caso não enviado senha, deve retornar status 400 e messagem de erro', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send(userMock.email);
+    chaiHttpResponse = await chai.request(app).post('/login').send({email:userMock.email});
     expect(chaiHttpResponse.status).to.be.eq(400);
-    expect(chaiHttpResponse.body).to.be.eq({message:'Incorrect email or password'})
+    expect(chaiHttpResponse.body.message).to.be.eql('All fields must be filled')
   })
 
   it('Caso enviado email invalido, deve retornar status 401 e messagem de erro', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send(fakeUserMock.email);
+    chaiHttpResponse = await chai.request(app).post('/login').send({email:fakeUserMock.email, password:'secret_admin'});
     expect(chaiHttpResponse.status).to.be.eq(401);
-    expect(chaiHttpResponse.body).to.be.eq({message:'Incorrect email or password'})
+    expect(chaiHttpResponse.body.message).to.be.eql('Incorrect email or password')
   })
 
   it('Caso enviado senha invalida, deve retornar status 401 e messagem de erro', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send(fakeUserMock.password);
+    chaiHttpResponse = await chai.request(app).post('/login').send({email:userMock.email,password:fakeUserMock.password});
     expect(chaiHttpResponse.status).to.be.eq(401);
-    expect(chaiHttpResponse.body).to.have.eq({message:'Incorrect email or password'})
+    expect(chaiHttpResponse.body.message).to.be.eql('Incorrect email or password')
   })
 })
