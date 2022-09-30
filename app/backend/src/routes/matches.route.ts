@@ -8,7 +8,7 @@ const matchRepository = new MatchRepository();
 const matchService = new MatchService(matchRepository);
 const matchController = new MatchController(matchService);
 
-router.get('/matches', matchController.getAll);
 router.get('/matches', matchController.getAllInProgress);
+router.get('/matches', matchController.getAll);
 
 export default router;

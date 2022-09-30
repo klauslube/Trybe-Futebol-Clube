@@ -1,4 +1,4 @@
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import MatchService from '../services/MatchService';
 
 export default class TeamController {
@@ -10,9 +10,12 @@ export default class TeamController {
     return res.status(200).json(allMatches);
   };
 
-  public getAllInProgress = async (req: Request, res: Response) => {
-    const { q } = req.query;
-    const allMatches = await this.matchService.getAllInProgress(q);
+  public getAllInProgress = async (req: Request, res: Response, next: NextFunction) => {
+    const { inProgress } = req.query;
+    console.log(req.query);
+    if (!inProgress) return next();
+
+    const allMatches = await this.matchService.getAllInProgress(inProgress === 'true');
 
     return res.status(200).json(allMatches);
   };

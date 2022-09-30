@@ -8,7 +8,7 @@ export default class MatchService {
     return allMatches;
   }
 
-  public async getAllInProgress(query) {
+  public async getAllInProgress(query:boolean) {
     const allMatches = await this.matchModel.findAllInProgress(query);
     return allMatches;
   }
