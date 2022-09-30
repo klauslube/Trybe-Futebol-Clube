@@ -1,4 +1,3 @@
-// import ILogin from '../interfaces/ILogin';
 import User from '../database/models/User';
 import { IUser } from '../interfaces/IUser';
 
