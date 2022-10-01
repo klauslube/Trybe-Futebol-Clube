@@ -21,9 +21,12 @@ export default class MatchRepository {
   }
 
   async createMatch(matchData:IMatch) {
-    console.log(matchData);
-
     const newMatch = await this.matchModel.create(matchData);
     return newMatch;
+  }
+
+  async updateMatch(id:number) {
+    const updatedMatch = await this.matchModel.update({ inProgress: false }, { where: { id } });
+    return updatedMatch;
   }
 }

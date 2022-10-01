@@ -22,4 +22,10 @@ export default class MatchService {
     const newMatch = await this.matchModel.createMatch(matchData);
     return newMatch;
   }
+
+  public async updateMatch(id:number) {
+    const updatedMatch = await this.matchModel.updateMatch(id);
+    if (!updatedMatch) throw new CustomError(400, 'id errado');
+    return updatedMatch;
+  }
 }

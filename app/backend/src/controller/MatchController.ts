@@ -29,4 +29,13 @@ export default class TeamController {
 
     return res.status(201).json(newMatch);
   };
+
+  public updateMatch = async (req:Request, res:Response) => {
+    const { id } = req.params;
+    if (!id) throw new CustomError(401, 'Id not found');
+
+    await this.matchService.updateMatch(Number(id));
+
+    return res.status(200).json({ message: 'Finished' });
+  };
 }
