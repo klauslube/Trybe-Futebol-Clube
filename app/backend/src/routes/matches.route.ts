@@ -2,10 +2,12 @@ import { Router } from 'express';
 import MatchRepository from '../repositories/MatchRepository';
 import MatchService from '../services/MatchService';
 import MatchController from '../controller/MatchController';
+import TeamRepository from '../repositories/TeamRepository';
 
 const router = Router();
 const matchRepository = new MatchRepository();
-const matchService = new MatchService(matchRepository);
+const teamRepository = new TeamRepository();
+const matchService = new MatchService(matchRepository, teamRepository);
 const matchController = new MatchController(matchService);
 
 router.get('/matches', matchController.getAllInProgress);
