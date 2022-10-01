@@ -11,6 +11,6 @@ export default function authToken(token:string):IUser {
     return decoded as IUser;
   } catch (err) {
     console.log(err);
-    throw new CustomError(401, 'Invalid token');
+    throw new CustomError(401, 'Token must be a valid token');
   }
 }
