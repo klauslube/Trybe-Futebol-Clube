@@ -1,3 +1,6 @@
+import authToken from '../helper/authToken';
+import CustomError from '../middlewares/CustomError';
+import IMatch from '../interfaces/IMatch';
 import MatchRepository from '../repositories/MatchRepository';
 
 export default class MatchService {
@@ -11,5 +14,12 @@ export default class MatchService {
   public async getAllInProgress(query:boolean) {
     const allMatches = await this.matchModel.findAllInProgress(query);
     return allMatches;
+  }
+
+  public async createMatch(matchData:IMatch, token:string) {
+    const verifyUser = authToken(token);
+    if (!verifyUser) throw new CustomError(401, 'Invalid user');
+    const newMatch = await this.matchModel.createMatch(matchData);
+    return newMatch;
   }
 }

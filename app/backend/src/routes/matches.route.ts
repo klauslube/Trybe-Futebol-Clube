@@ -10,5 +10,5 @@ const matchController = new MatchController(matchService);
 
 router.get('/matches', matchController.getAllInProgress);
 router.get('/matches', matchController.getAll);
-
+router.post('/matches', matchController.createMatch);
 export default router;
