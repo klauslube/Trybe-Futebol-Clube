@@ -1,6 +1,5 @@
 import { verify, Secret } from 'jsonwebtoken';
 import { IUser } from '../interfaces/IUser';
-// import ILogin from '../interfaces/ILogin';
 import CustomError from '../middlewares/CustomError';
 
 export default function authToken(token:string):IUser {

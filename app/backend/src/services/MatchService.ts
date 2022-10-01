@@ -19,6 +19,9 @@ export default class MatchService {
   public async createMatch(matchData:IMatch, token:string) {
     const verifyUser = authToken(token);
     if (!verifyUser) throw new CustomError(401, 'Invalid user');
+    if (matchData.homeTeam === matchData.awayTeam) {
+      throw new CustomError(401, 'It is not possible to create a match with two equal teams');
+    }
     const newMatch = await this.matchModel.createMatch(matchData);
     return newMatch;
   }
