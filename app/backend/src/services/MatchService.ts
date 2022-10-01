@@ -35,4 +35,9 @@ export default class MatchService {
     if (!updatedMatch) throw new CustomError(400, 'id errado');
     return updatedMatch;
   }
+
+  public async updateMatchGoals(id:number, matchGoals:IMatch) {
+    const updatedMatchGoals = await this.matchModel.updateMatchGoals(id, matchGoals);
+    return updatedMatchGoals;
+  }
 }

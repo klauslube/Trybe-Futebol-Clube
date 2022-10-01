@@ -29,4 +29,13 @@ export default class MatchRepository {
     const updatedMatch = await this.matchModel.update({ inProgress: false }, { where: { id } });
     return updatedMatch;
   }
+
+  async updateMatchGoals(id:number, matchGoals:IMatch) {
+    const updatedMatch = await this.matchModel.update(
+      {
+        homeTeamGoals: matchGoals.homeTeamGoals, awayTeamGoals: matchGoals.awayTeamGoals },
+      { where: { id, inProgress: true } },
+    );
+    return updatedMatch;
+  }
 }
