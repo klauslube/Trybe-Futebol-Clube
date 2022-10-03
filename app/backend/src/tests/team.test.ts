@@ -5,52 +5,66 @@ import * as mocha from 'mocha';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import User from '../database/models/User';
+
 
 import { Response } from 'superagent';
+import Team from '../database/models/Team';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
+const teamMock = [
+    {
+      id: 1,
+      teamName:"Avaí/Kindermann",
+    },
+    {
+     
+      id: 2,
+     
+      teamName:"Bahia"
+    },
+    {
+     
+      id: 3,
+      teamName:"Botafogo"
+    }
+  ]
 
-const fakeUserMock = {
-  username: "klaus",
-  role: "tryber",
-  email: "admin@fake.com",
-  password: "secret_fake",
+const oneTeam =   {
+  id: 1,
+  teamName:"Avaí/Kindermann",
 }
 
-const userMock = {
-  username: "Admin",
-  role: "admin",
-  email: "admin@admin.com",
-  password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW',
-}
-
-const loginMock = {
-  email: "admin@admin.com",
-  password: "secret_admin"
-}
-
-describe('Deve testar os metodos na rota /login', () => {
+describe('Deve testar os metodos na rota /teams', () => {
   let chaiHttpResponse: Response;
-  describe('metodo POST', () => {
+  describe('metodo GET', () => {
 
   beforeEach(() => {
-    sinon.stub(User, "findOne").resolves(userMock as User);
+    sinon.stub(Team, "findAll").resolves(teamMock as Team[]);
+    sinon.stub(Team, "findByPk").resolves(oneTeam as Team);
   });
 
   after(()=> {
-    (User.findOne as sinon.SinonStub).restore()
+    (Team.findAll as sinon.SinonStub).restore(),
+    (Team.findByPk as sinon.SinonStub).restore()
 
   })
   
-  it('Deve retornar status 200 e um Token em caso de sucesso', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send({email:loginMock.email, password:loginMock.password});
+  it('Deve retornar status 200 e todos os times em caso de sucesso', async () => {
+    chaiHttpResponse = await chai.request(app).get('/teams');
   
     expect(chaiHttpResponse.status).to.be.eq(200);
-    expect(chaiHttpResponse.body).to.have.property("token");
+    expect(chaiHttpResponse.body).to.be.eql(teamMock);
     });
   })
+
+  it.only('Deve retornar status 200 e o time escolhido por id', async () => {
+    chaiHttpResponse = await chai.request(app).get('/teams/1')
+    
+    expect(chaiHttpResponse.status).to.be.eq(200);
+    expect(chaiHttpResponse.body).to.be.eql(teamMock[0]);
+  });
+  
 })
