@@ -60,7 +60,7 @@ describe('Deve testar os metodos na rota /teams', () => {
     });
   })
 
-  it.only('Deve retornar status 200 e o time escolhido por id', async () => {
+  it('Deve retornar status 200 e o time escolhido por id', async () => {
     chaiHttpResponse = await chai.request(app).get('/teams/1')
     
     expect(chaiHttpResponse.status).to.be.eq(200);
