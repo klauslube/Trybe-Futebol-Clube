@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as mocha from 'mocha';
-// import bcrypt from 'bcryptjs'
+import * as jwt from 'jsonwebtoken'
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -9,7 +9,6 @@ import { app } from '../app';
 import User from '../database/models/User';
 
 import { Response } from 'superagent';
-// import tokenGenerate from '../helper/tokenGenerate';
 
 chai.use(chaiHttp);
 
@@ -41,6 +40,8 @@ describe('Deve testar os metodos na rota /login', () => {
 
   beforeEach(() => {
     sinon.stub(User, "findOne").resolves(userMock as User);
+    // sinon.stub(jwt, 'sign').resolves('token');
+    // sinon.stub(jwt, 'verify').resolves(userMock)
   });
 
   after(()=> {
@@ -54,7 +55,7 @@ describe('Deve testar os metodos na rota /login', () => {
     expect(chaiHttpResponse.status).to.be.eq(200);
     expect(chaiHttpResponse.body).to.have.property("token");
     });
-  })
+  
 
   it('Caso não enviado email, deve retornar status 400 e messagem de erro', async () => {
     chaiHttpResponse = await chai.request(app).post('/login').send({password:loginMock.password});
@@ -80,4 +81,26 @@ describe('Deve testar os metodos na rota /login', () => {
     expect(chaiHttpResponse.body.message).to.be.eql('Incorrect email or password')
   })
 
+
+  describe('Metodo GET', () => {
+    it('Deve retornar status 200 e um objeto contento a role do user em caso de sucesso', async () => {
+      let response:Response
+      response = await chai.request(app).post('/login').send({email:loginMock.email, password:loginMock.password});
+      
+      chaiHttpResponse = await chai.request(app).get('/login/validate').set("Authorization", response.body.token);
+      
+      expect(chaiHttpResponse.status).to.be.eq(200);
+      expect(chaiHttpResponse.body.role).to.be.eql("admin")
+    })
+    it('Deve retornar status 400 e lançar erro caso não enviado token', async () => {
+      let response:Response
+      response = await chai.request(app).post('/login').send({email:loginMock.email, password:loginMock.password});
+      
+      chaiHttpResponse = await chai.request(app).get('/login/validate').set("Authorization", '');
+      
+      expect(chaiHttpResponse.status).to.be.eq(401);
+      expect(chaiHttpResponse.body.message).to.be.eql("Token not found")
+    })
+  })
+  })
 })
