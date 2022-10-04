@@ -69,7 +69,7 @@ const loginMock = {
   password: "secret_admin",
 };
 
-describe("Deve testar os metodos na rota /matches", () => {
+describe.only("Deve testar os metodos na rota /matches", () => {
   let chaiHttpResponse: Response;
   describe("metodo GET", () => {
     before(() => {
@@ -111,8 +111,6 @@ describe("Deve testar os metodos na rota /matches", () => {
   describe("metodo POST", () => {
     before(() => {
       sinon.stub(Match, "create").resolves(match as any);
-      // sinon.stub(Match, "create").resolves(fakeTeamMatch as any);
-      // sinon.stub(Match, "create").resolves(sameTeamMatch as any);
     });
 
     after(() => {
