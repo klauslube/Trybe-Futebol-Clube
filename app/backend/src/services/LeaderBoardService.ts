@@ -104,7 +104,7 @@ export default class LeaderBoardService {
   getHomeAway(allTeams:ITeamsWithMatches[]) {
     const getAll = [...this.getHome(allTeams), ...this.getAway(allTeams)];
     const teamsName = [...new Set(getAll.map((team) => team.name))];
-    const sumValues = teamsName.reduce((acc:any, cur) => {
+    const sumValues = teamsName.reduce((acc:object[], cur) => {
       let leaderboard:ILeaderboard = { ...this.objScores };
       getAll.forEach((team) => {
         if (team.name === cur) {
@@ -114,7 +114,7 @@ export default class LeaderBoardService {
       return [...acc, leaderboard];
     }, []);
 
-    return LeaderBoardService.sortTeams(sumValues);
+    return LeaderBoardService.sortTeams(sumValues as ILeaderboard[]);
   }
 
   static getLeaderBoard(leaderboard:ILeaderboard, team:ILeaderboard) {
