@@ -100,4 +100,36 @@ export default class LeaderBoardService {
     const sortedTeams = LeaderBoardService.sortTeams(points);
     return sortedTeams;
   }
+
+  getHomeAway(allTeams:ITeamsWithMatches[]) {
+    const getAll = [...this.getHome(allTeams), ...this.getAway(allTeams)];
+    const teamsName = [...new Set(getAll.map((team) => team.name))];
+    const sumValues = teamsName.reduce((acc:any, cur) => {
+      let leaderboard:ILeaderboard = { ...this.objScores };
+      getAll.forEach((team) => {
+        if (team.name === cur) {
+          leaderboard = LeaderBoardService.getLeaderBoard(leaderboard, team);
+        }
+      });
+      leaderboard.efficiency = parseFloat((leaderboard.efficiency /= 2).toFixed(2));
+      return [...acc, leaderboard];
+    }, []);
+
+    return LeaderBoardService.sortTeams(sumValues);
+  }
+
+  static getLeaderBoard(leaderboard:ILeaderboard, team:ILeaderboard) {
+    const board = { ...leaderboard };
+    board.name = team.name;
+    board.totalVictories += team.totalVictories;
+    board.totalGames += team.totalGames;
+    board.totalLosses += team.totalLosses;
+    board.totalPoints += team.totalPoints;
+    board.totalDraws += team.totalDraws;
+    board.goalsBalance += team.goalsBalance;
+    board.goalsFavor += team.goalsFavor;
+    board.goalsOwn += team.goalsOwn;
+    board.efficiency += team.efficiency;
+    return board;
+  }
 }
