@@ -69,7 +69,7 @@ const loginMock = {
   password: "secret_admin",
 };
 
-describe.only("Deve testar os metodos na rota /matches", () => {
+describe("Deve testar os metodos na rota /matches", () => {
   let chaiHttpResponse: Response;
   describe("metodo GET", () => {
     before(() => {
@@ -94,14 +94,12 @@ describe.only("Deve testar os metodos na rota /matches", () => {
       console.log(chaiHttpResponse.body);
 
       expect(chaiHttpResponse.status).to.be.eq(200);
-      // expect(chaiHttpResponse.body[0]).to.have.key('inProgress');
     });
 
     it("Deve retornar status 200 e todas as partidas que não estão em andamento", async () => {
       chaiHttpResponse = await chai
         .request(app)
         .get("/matches?inProgress=false");
-      // console.log(chaiHttpResponse.body[0]);
 
       expect(chaiHttpResponse.status).to.be.eq(200);
       expect(chaiHttpResponse.body[0].inProgress).to.be.eq(false);
@@ -213,10 +211,8 @@ describe.only("Deve testar os metodos na rota /matches", () => {
 
     it("Deve retornar status 200 e mensagem de termino ao alterar status de andamennto da partida", async () => {
       chaiHttpResponse = await chai.request(app).patch("/matches/52/finish");
-      // console.log(chaiHttpResponse.body);
-
+    
       expect(chaiHttpResponse.status).to.be.eq(200);
-      // expect(chaiHttpResponse.body.inProgress).to.be.eq(false);
       expect(chaiHttpResponse.body.message).to.be.eql("Finished");
     });
   });
