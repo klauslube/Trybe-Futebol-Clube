@@ -4,13 +4,15 @@ import TeamRepository from '../repositories/TeamRepository';
 export default class LeaderBoardService {
   public objScores = {
     name: '',
+    totalPoints: 0,
+    totalGames: 0,
     totalVictories: 0,
     totalLosses: 0,
     totalDraws: 0,
-    totalGames: 0,
     goalsFavor: 0,
     goalsOwn: 0,
     goalsBalance: 0,
+    efficiency: 0,
   };
 
   constructor(private teamModel:TeamRepository) { }
@@ -20,16 +22,16 @@ export default class LeaderBoardService {
     return allMatchesTeam;
   }
 
-  calculateScores(allTeams: ILeaderboard[]) {
+  calculateScores(allMatchesTeams: ILeaderboard[]) {
     const teamsData:IWinsBalance[] = [];
-    allTeams.forEach((team) => {
+    allMatchesTeams.forEach((team) => {
       const objScores = { ...this.objScores };
       team.homeTeamMatches.forEach((match:any) => {
         objScores.totalVictories = match.homeTeamGoals > match.awayTeamGoals
           ? objScores.totalVictories += 1 : objScores.totalVictories += 0;
         objScores.totalLosses = match.homeTeamGoals < match.awayTeamGoals
           ? objScores.totalLosses += 1 : objScores.totalLosses += 0;
-        objScores.totalDraws = match.homeTeamGoals > match.awayTeamGoals
+        objScores.totalDraws = match.homeTeamGoals === match.awayTeamGoals
           ? objScores.totalDraws += 1 : objScores.totalDraws += 0;
         objScores.totalGames += 1; objScores.goalsFavor += match.homeTeamGoals;
         objScores.goalsOwn += match.awayTeamGoals;
@@ -42,8 +44,8 @@ export default class LeaderBoardService {
   }
 
   static calculateTotalPoints(teamsData: IWinsBalance[]) {
-    let totalPoints = 0;
     let efficiency = 0;
+    let totalPoints = 0;
     return teamsData.map((team) => {
       totalPoints = (team.totalVictories * 3) + team.totalDraws;
       efficiency = ((totalPoints) / (team.totalGames * 3)) * 100;
@@ -54,9 +56,20 @@ export default class LeaderBoardService {
     });
   }
 
+  static sortTeams(allTeams:ILeaderboard[]) {
+    const sortedTeams = allTeams.sort((a, b) => b.totalPoints - a.totalPoints
+    || b.totalVictories - a.totalVictories
+    || b.goalsBalance - a.goalsBalance
+    || b.goalsFavor - a.goalsFavor
+    || b.goalsOwn - a.goalsOwn);
+    return sortedTeams;
+  }
+
   getHome(allTeams:ILeaderboard[]) {
     const scores = this.calculateScores(allTeams);
     const points = LeaderBoardService.calculateTotalPoints(scores);
-    return points;
+    const sortedTeams = LeaderBoardService.sortTeams(points as any[]);
+    return sortedTeams;
+    // return points;
   }
 }

@@ -23,7 +23,7 @@ export interface IWinsBalance {
   goalsBalance: number;
 }
 
-export interface IPoints {
-  totalPoints: number;
-  efficiency: number;
-}
+// export interface IPoints {
+//   totalPoints: number;
+//   efficiency: number;
+// }
