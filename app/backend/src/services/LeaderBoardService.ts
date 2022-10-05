@@ -111,7 +111,6 @@ export default class LeaderBoardService {
           leaderboard = LeaderBoardService.getLeaderBoard(leaderboard, team);
         }
       });
-      leaderboard.efficiency = parseFloat((leaderboard.efficiency /= 2).toFixed(2));
       return [...acc, leaderboard];
     }, []);
 
@@ -129,7 +128,7 @@ export default class LeaderBoardService {
     board.goalsBalance += team.goalsBalance;
     board.goalsFavor += team.goalsFavor;
     board.goalsOwn += team.goalsOwn;
-    board.efficiency += team.efficiency;
+    board.efficiency = parseFloat(((board.totalPoints / (board.totalGames * 3)) * 100).toFixed(2));
     return board;
   }
 }
