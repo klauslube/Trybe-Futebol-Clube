@@ -1,4 +1,3 @@
-// import ITeam from '../interfaces/ITeam';
 import Match from '../database/models/Match';
 import Team from '../database/models/Team';
 

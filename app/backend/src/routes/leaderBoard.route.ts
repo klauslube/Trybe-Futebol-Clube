@@ -8,6 +8,7 @@ const teamRepository = new TeamRepository();
 const leaderBoardService = new LeaderBoardService(teamRepository);
 const leaderBoardController = new LeaderBoardController(leaderBoardService);
 
-router.get('/leaderboard/home', leaderBoardController.getAllWithMatches);
+router.get('/leaderboard/home', leaderBoardController.getAllWithMatchesHome);
+router.get('/leaderboard/away', leaderBoardController.getAllWithMatchesAway);
 
 export default router;

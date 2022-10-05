@@ -1,4 +1,5 @@
-import { ILeaderboard, IWinsBalance } from '../interfaces/ILeaderBoard';
+import IMatch from '../interfaces/IMatch';
+import { ILeaderboard, ITeamsWithMatches } from '../interfaces/ILeaderBoard';
 import TeamRepository from '../repositories/TeamRepository';
 
 export default class LeaderBoardService {
@@ -22,11 +23,11 @@ export default class LeaderBoardService {
     return allMatchesTeam;
   }
 
-  calculateScores(allMatchesTeams: ILeaderboard[]) {
-    const teamsData:IWinsBalance[] = [];
+  calculateScoresHome(allMatchesTeams: ITeamsWithMatches[]) {
+    const teamsData:ILeaderboard[] = [];
     allMatchesTeams.forEach((team) => {
       const objScores = { ...this.objScores };
-      team.homeTeamMatches.forEach((match:any) => {
+      team.homeTeamMatches.forEach((match:IMatch) => {
         objScores.totalVictories = match.homeTeamGoals > match.awayTeamGoals
           ? objScores.totalVictories += 1 : objScores.totalVictories += 0;
         objScores.totalLosses = match.homeTeamGoals < match.awayTeamGoals
@@ -43,7 +44,28 @@ export default class LeaderBoardService {
     return teamsData;
   }
 
-  static calculateTotalPoints(teamsData: IWinsBalance[]) {
+  calculateScoresAway(allMatchesTeams: ITeamsWithMatches[]) {
+    const teamsData:ILeaderboard[] = [];
+    allMatchesTeams.forEach((team) => {
+      const objScores = { ...this.objScores };
+      team.awayTeamMatches.forEach((match:IMatch) => {
+        objScores.totalVictories = match.awayTeamGoals > match.homeTeamGoals
+          ? objScores.totalVictories += 1 : objScores.totalVictories += 0;
+        objScores.totalLosses = match.awayTeamGoals < match.homeTeamGoals
+          ? objScores.totalLosses += 1 : objScores.totalLosses += 0;
+        objScores.totalDraws = match.awayTeamGoals === match.homeTeamGoals
+          ? objScores.totalDraws += 1 : objScores.totalDraws += 0;
+        objScores.totalGames += 1; objScores.goalsFavor += match.awayTeamGoals;
+        objScores.goalsOwn += match.homeTeamGoals;
+        objScores.goalsBalance = objScores.goalsFavor - objScores.goalsOwn;
+        objScores.name = team.teamName;
+      });
+      teamsData.push(objScores);
+    });
+    return teamsData;
+  }
+
+  static calculateTotalPoints(teamsData: ILeaderboard[]) {
     let efficiency = 0;
     let totalPoints = 0;
     return teamsData.map((team) => {
@@ -65,11 +87,17 @@ export default class LeaderBoardService {
     return sortedTeams;
   }
 
-  getHome(allTeams:ILeaderboard[]) {
-    const scores = this.calculateScores(allTeams);
+  getHome(allTeams:ITeamsWithMatches[]) {
+    const scores = this.calculateScoresHome(allTeams);
     const points = LeaderBoardService.calculateTotalPoints(scores);
-    const sortedTeams = LeaderBoardService.sortTeams(points as any[]);
+    const sortedTeams = LeaderBoardService.sortTeams(points);
     return sortedTeams;
-    // return points;
+  }
+
+  getAway(allTeams:ITeamsWithMatches[]) {
+    const scores = this.calculateScoresAway(allTeams);
+    const points = LeaderBoardService.calculateTotalPoints(scores);
+    const sortedTeams = LeaderBoardService.sortTeams(points);
+    return sortedTeams;
   }
 }
