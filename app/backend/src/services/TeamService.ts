@@ -1,4 +1,3 @@
-// import ITeam from '../interfaces/ITeam';
 import TeamRepository from '../repositories/TeamRepository';
 
 export default class TeamService {

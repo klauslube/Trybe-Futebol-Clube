@@ -1,4 +1,3 @@
-// import ILogin from '../interfaces/ILogin';
 import tokenGenerate from '../helper/tokenGenerate';
 import CustomError from '../middlewares/CustomError';
 import UserRepository from '../repositories/UserRepository';
