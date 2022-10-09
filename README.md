@@ -24,7 +24,7 @@ Esse Projeto é um site informativo sobre partidas e classificações dos times 
   * __REST__ | [Arquitetura Rest](https://restfulapi.net/).
   * __POO__ | [Programação orientada a objetos](https://www.alura.com.br/artigos/poo-programacao-orientada-a-objetos).
   * __SOLID__ | [Principios de design SOLID](https://medium.com/desenvolvendo-com-paixao/o-que-%C3%A9-solid-o-guia-completo-para-voc%C3%AA-entender-os-5-princ%C3%ADpios-da-poo-2b937b3fc530)
-  * __mocha, chai, Sinon__ | [Criação de testes](https://mochajs.org/)(https://sinonjs.org/)
+  * __mocha, chai, Sinon__ | [Criação de testes](https://mochajs.org/),[Stubs e mocks](https://sinonjs.org/)
 
 # Instruções da aplicação
 ### Instalar dependências
