@@ -3,7 +3,7 @@ Esse projeto é uma API RESTfull na qual utiliza arquitetura MSC(model, Service,
 
 
 # Sumário
-- [Bem vindo ao Blogs API project!](#bem-vindo-ao-trybe-futebol-clube!)
+- [Bem vindo ao Trybe Futebol Clube project!](#bem-vindo-ao-trybe-futebol-clube!)
 - [Sumário](#sumário)
 - [Contexto](#contexto)
 - [Tecnologias, bibliotecas e arquiteturas usadas](#tecnologias-bibliotecas-e-arquiteturas-usadas)
